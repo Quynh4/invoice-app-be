@@ -3,20 +3,31 @@ package com.example.invoiceapp.controller;
 
 import com.example.invoiceapp.model.InvoiceTemplate;
 import com.example.invoiceapp.service.InvoiceTemplateService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/templates")
 @CrossOrigin(origins = "*") // Cho phép frontend gọi API
 public class InvoiceTemplateController {
 
-    private final InvoiceTemplateService service;
+    @Autowired
+    private InvoiceTemplateService service;
 
-    public InvoiceTemplateController(InvoiceTemplateService service) {
-        this.service = service;
+    @PostMapping
+    public ResponseEntity<?> saveHtmlContent(@RequestBody Map<String, String> body) {
+        String html = body.get("html");
+
+        if (html == null || html.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("HTML content is missing");
+        }
+
+        InvoiceTemplate savedTemplate = service.saveHtmlContent(html);
+        return ResponseEntity.ok("Invoice template saved successfully with ID = " + savedTemplate.getId());
     }
 
     @GetMapping
@@ -29,11 +40,6 @@ public class InvoiceTemplateController {
         return service.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public InvoiceTemplate create(@RequestBody InvoiceTemplate template) {
-        return service.save(template);
     }
 
     @PutMapping("/{id}")

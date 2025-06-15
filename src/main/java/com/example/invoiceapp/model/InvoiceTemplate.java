@@ -1,13 +1,11 @@
 package com.example.invoiceapp.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Data
+@RequiredArgsConstructor
 public class InvoiceTemplate {
 
     @Id
