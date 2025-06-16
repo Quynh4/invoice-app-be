@@ -2,10 +2,13 @@ package com.example.invoiceapp.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "invoice_template")
 public class InvoiceTemplate {
 
     @Id
@@ -19,53 +22,23 @@ public class InvoiceTemplate {
 
     private String createdBy;
 
-    private String createdAt;
+    private LocalDateTime createdAt;
 
-    public InvoiceTemplate(Long id, String templateName, String htmlContent, String createdBy, String createdAt) {
-        this.id = id;
+    private Long companyId;
+    private Long invoiceTypeId;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
+    // Constructor với companyId
+    public InvoiceTemplate(String templateName, String htmlContent, String createdBy, Long companyId, Long invoiceTypeId) {
         this.templateName = templateName;
         this.htmlContent = htmlContent;
         this.createdBy = createdBy;
-        this.createdAt = createdAt;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTemplateName() {
-        return templateName;
-    }
-
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
-    }
-
-    public String getHtmlContent() {
-        return htmlContent;
-    }
-
-    public void setHtmlContent(String htmlContent) {
-        this.htmlContent = htmlContent;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+        this.companyId = companyId;
+        this.createdAt = LocalDateTime.now();
+        this.invoiceTypeId = invoiceTypeId;
     }
 }
